@@ -30,8 +30,9 @@ class ServiceProvider extends AbstractServiceProvider implements BootableService
      * Method will be invoked on registration of a service provider implementing
      * this interface. Provides ability for eager loading of Service Providers.
      *
-     * @return void
      * @throws \Exception
+     *
+     * @return void
      */
     public function boot()
     {
@@ -79,7 +80,7 @@ class ServiceProvider extends AbstractServiceProvider implements BootableService
         // loops are generated.
         //
         $tapestry->getEventEmitter()->addListener('compile.after', function () use ($tapestry, $project) {
-            $cache = new Cache($project->currentWorkingDirectory . DIRECTORY_SEPARATOR . '.'. $project->environment .'_301_cache', 'permanent');
+            $cache = new Cache($project->currentWorkingDirectory.DIRECTORY_SEPARATOR.'.'.$project->environment.'_301_cache', 'permanent');
             $cache->load();
             $redirects = [];
 
@@ -95,7 +96,7 @@ class ServiceProvider extends AbstractServiceProvider implements BootableService
                         $item['current'] = $currentPermalink;
 
                         // 2bi:
-                        $item['history'] = array_filter($item['history'], function($v) use ($item) {
+                        $item['history'] = array_filter($item['history'], function ($v) use ($item) {
                             return $v !== $item['current'];
                         });
                     }
@@ -103,20 +104,20 @@ class ServiceProvider extends AbstractServiceProvider implements BootableService
                     // 1:
                     $item = [
                         'current' => $currentPermalink,
-                        'history' => []
+                        'history' => [],
                     ];
                 }
 
                 if (count($item['history']) > 0) {
                     foreach ($item['history'] as $from) {
-                        array_push($redirects, 'rewrite ^/'. $from .'$ '. url($item['current']) .' permanent;');
+                        array_push($redirects, 'rewrite ^/'.$from.'$ '.url($item['current']).' permanent;');
                     }
                 }
                 $cache->setItem($fileIdentifier, $item);
             }
 
             $cache->save();
-            file_put_contents($project->currentWorkingDirectory . DIRECTORY_SEPARATOR . 'nginx_redirects.conf', implode("\n", $redirects));
+            file_put_contents($project->currentWorkingDirectory.DIRECTORY_SEPARATOR.'nginx_redirects.conf', implode("\n", $redirects));
         });
     }
 }

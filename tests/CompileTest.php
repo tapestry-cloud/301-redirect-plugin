@@ -15,7 +15,7 @@ class CompileTest extends CommandTestBase
 {
     public static function setUpBeforeClass()
     {
-        self::$tmpPath = __DIR__ . DIRECTORY_SEPARATOR . '_tmp';
+        self::$tmpPath = __DIR__.DIRECTORY_SEPARATOR.'_tmp';
         $fileSystem = new Filesystem();
         $fileSystem->mkdir(self::$tmpPath);
         chdir(self::$tmpPath);
@@ -24,8 +24,8 @@ class CompileTest extends CommandTestBase
 
     protected function copyDirectory($from, $to)
     {
-        $from = __DIR__ . DIRECTORY_SEPARATOR . $from;
-        $to = __DIR__ . DIRECTORY_SEPARATOR . $to;
+        $from = __DIR__.DIRECTORY_SEPARATOR.$from;
+        $to = __DIR__.DIRECTORY_SEPARATOR.$to;
         $directoryContent = new \RecursiveDirectoryIterator($from, \FilesystemIterator::SKIP_DOTS);
         $files = new \RecursiveIteratorIterator($directoryContent, \RecursiveIteratorIterator::CHILD_FIRST);
         /** @var \SplFileInfo $item */
@@ -44,32 +44,33 @@ class CompileTest extends CommandTestBase
         $definitions = new DefaultInputDefinition();
 
         $tapestry = new Tapestry(new ArrayInput([
-            '--site-dir' => __DIR__ . DIRECTORY_SEPARATOR . '_tmp',
-            '--env' => 'testing'
+            '--site-dir' => __DIR__.DIRECTORY_SEPARATOR.'_tmp',
+            '--env'      => 'testing',
         ], $definitions));
         $generator = new Generator($tapestry->getContainer()->get('Compile.Steps'), $tapestry);
 
         /** @var Project $project */
         $project = $tapestry->getContainer()->get(Project::class);
         $project->set('cmd_options', []);
-        $generator->generate($project, new NullOutput);
+        $generator->generate($project, new NullOutput());
         // </Bootstrap Tapestry>
     }
 
-    function testPlugin() {
+    public function testPlugin()
+    {
         $this->copyDirectory('assets/build_test_1/src', '_tmp');
         $this->bootstrapTapestry();
-        $this->assertFileEquals(__DIR__ . '/assets/build_test_1/check/nginx_redirects_first.conf', __DIR__ . '/_tmp/nginx_redirects.conf');
+        $this->assertFileEquals(__DIR__.'/assets/build_test_1/check/nginx_redirects_first.conf', __DIR__.'/_tmp/nginx_redirects.conf');
 
         // Modify permalinks to prompt redirect mapping
-        self::$fileSystem->copy(__DIR__ . '/_tmp/config.php', __DIR__ . '/_tmp/config.old.php', true);
-        self::$fileSystem->copy(__DIR__ . '/_tmp/config.new.php', __DIR__ . '/_tmp/config.php', true);
+        self::$fileSystem->copy(__DIR__.'/_tmp/config.php', __DIR__.'/_tmp/config.old.php', true);
+        self::$fileSystem->copy(__DIR__.'/_tmp/config.new.php', __DIR__.'/_tmp/config.php', true);
         $this->bootstrapTapestry();
-        $this->assertFileEquals(__DIR__ . '/assets/build_test_1/check/nginx_redirects_second.conf', __DIR__ . '/_tmp/nginx_redirects.conf');
+        $this->assertFileEquals(__DIR__.'/assets/build_test_1/check/nginx_redirects_second.conf', __DIR__.'/_tmp/nginx_redirects.conf');
 
         // Modify permalinks once more to reset back to before, this tests the mapping works when changes are reverted
-        self::$fileSystem->copy(__DIR__ . '/_tmp/config.old.php', __DIR__ . '/_tmp/config.php', true);
+        self::$fileSystem->copy(__DIR__.'/_tmp/config.old.php', __DIR__.'/_tmp/config.php', true);
         $this->bootstrapTapestry();
-        $this->assertFileEquals(__DIR__ . '/assets/build_test_1/check/nginx_redirects_third.conf', __DIR__ . '/_tmp/nginx_redirects.conf');
+        $this->assertFileEquals(__DIR__.'/assets/build_test_1/check/nginx_redirects_third.conf', __DIR__.'/_tmp/nginx_redirects.conf');
     }
 }

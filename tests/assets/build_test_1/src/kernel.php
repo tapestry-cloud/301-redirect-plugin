@@ -5,7 +5,7 @@ namespace SiteOne;
 use Tapestry\Modules\Kernel\KernelInterface;
 use Tapestry\Tapestry;
 
-class TestKernel implements KernelInterface
+class kernel implements KernelInterface
 {
     /**
      * @var Tapestry
