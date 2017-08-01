@@ -2,7 +2,7 @@
 
 return [
     'debug'  => false,
-    'kernel' => \SiteOne\TestKernel::class,
+    'kernel' => \SiteOne\Kernel::class,
     'site'   => [
         'title'       => 'redirect-plugin.',
         'url'         => 'http://localhost:3000',
