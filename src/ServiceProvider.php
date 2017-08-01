@@ -116,7 +116,7 @@ class ServiceProvider extends AbstractServiceProvider implements BootableService
             }
 
             $cache->save();
-            file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . 'nginx_redirects.conf', implode("\n", $redirects));
+            file_put_contents($project->currentWorkingDirectory . DIRECTORY_SEPARATOR . 'nginx_redirects.conf', implode("\n", $redirects));
         });
     }
 }
