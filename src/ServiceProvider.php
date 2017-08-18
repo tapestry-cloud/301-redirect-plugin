@@ -110,6 +110,16 @@ class ServiceProvider extends AbstractServiceProvider implements BootableService
 
                 if (count($item['history']) > 0) {
                     foreach ($item['history'] as $from) {
+                        if (substr($from, 0, 1) === '/') {
+                            $from = substr($from, 1);
+                        }
+                        if (strpos($from, 'index.html') !== false) {
+                            $from = substr($from, 0, strpos($from, 'index.html'));
+                        }
+                        // Ensure that Nginx matches the url with or without a tailing forward slash.
+                        if (substr($from, -1, 1) === '/') {
+                            $from .= '?';
+                        }
                         array_push($redirects, 'rewrite ^/'.$from.'$ '.url($item['current']).' permanent;');
                     }
                 }
